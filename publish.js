@@ -11,7 +11,7 @@ var template = require('jsdoc/template');
 var util = require('util');
 
 var htmlsafe = helper.htmlsafe;
-var linkto = helper.linkto;
+var linkto = cleanLinkTo(helper.linkto);
 var resolveAuthorLinks = helper.resolveAuthorLinks;
 var scopeToPunc = helper.scopeToPunc;
 var hasOwnProp = Object.prototype.hasOwnProperty;
@@ -20,6 +20,7 @@ var data;
 var view;
 
 var outdir = path.normalize(env.opts.destination);
+var config = env.conf.templates || {};
 
 function find(spec) {
   return helper.find(data, spec);
@@ -300,6 +301,8 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
   if (items.length) {
     var itemsNav = '';
 
+    if(config.sortByName)
+      item = items.sort(sortByName);
     items.forEach(function(item) {
       var methods = find({
         kind: 'function',
@@ -764,3 +767,23 @@ exports.publish = function(taffyData, opts, tutorials) {
 
   saveChildren(tutorials);
 };
+
+function cleanLinkTo(originalLinkTo) {
+  return function (longname, linkText, cssClass, fragmentId) {
+    if(config.stripModuleName) {
+      linkText = linkText || longname;
+      linkText = linkText.replace('module:', '');
+      var moduleString = config.stripModuleName + '/';
+      var moduleIndex = linkText.indexOf(moduleString);
+      if(linkText.indexOf(moduleString) > -1)
+        linkText = linkText.substring(moduleIndex + moduleString.length);
+    }
+    return originalLinkTo(longname, linkText, cssClass, fragmentId);
+  }
+}
+
+function sortByName(a, b) {
+    if(a.name > b.name) return 1;
+    if(a.name < b.name) return -1;
+    return 0;
+}
