@@ -429,18 +429,6 @@ function buildNav(members, packages, repoUrl, childPackage) {
   var seen = {};
   var seenTutorials = {};
 
-  if(packages){
-    nav = buildPackageNav(packages, nav);
-  }
-  nav += buildTutorialNav(members.tutorials, linktoTutorial);
-  nav += buildMemberNav(members.classes, 'Classes', seen, linkto);
-  nav += buildMemberNav(members.modules, 'Modules', {}, linkto);
-  nav += buildMemberNav(members.externals, 'Externals', seen, linktoExternal);
-  nav += buildMemberNav(members.events, 'Events', seen, linkto);
-  nav += buildMemberNav(members.namespaces, 'Namespaces', seen, linkto);
-  nav += buildMemberNav(members.mixins, 'Mixins', seen, linkto);
-  nav += buildMemberNav(members.interfaces, 'Interfaces', seen, linkto);
-
   if (members.globals.length) {
     var globalNav = '';
 
@@ -458,6 +446,18 @@ function buildNav(members, packages, repoUrl, childPackage) {
       nav += '<h3>Global</h3><ul>' + globalNav + '</ul>';
     }
   }
+
+  if(packages){
+    nav = buildPackageNav(packages, nav);
+  }
+  nav += buildTutorialNav(members.tutorials, linktoTutorial);
+  nav += buildMemberNav(members.classes, 'Classes', seen, linkto);
+  nav += buildMemberNav(members.modules, 'Modules', {}, linkto);
+  nav += buildMemberNav(members.externals, 'Externals', seen, linktoExternal);
+  nav += buildMemberNav(members.events, 'Events', seen, linkto);
+  nav += buildMemberNav(members.namespaces, 'Namespaces', seen, linkto);
+  nav += buildMemberNav(members.mixins, 'Mixins', seen, linkto);
+  nav += buildMemberNav(members.interfaces, 'Interfaces', seen, linkto);
 
   return nav;
 }
